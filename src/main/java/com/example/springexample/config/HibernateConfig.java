@@ -13,6 +13,7 @@ public class HibernateConfig {
 //    private static HibernateConfig instance=new HibernateConfig();
 //    private final SessionFactory sessionFactory;
 //
+
 //    private HibernateConfig() {
 //        this.sessionFactory=configurationHibernate();
 //    }
