@@ -3,10 +3,7 @@ package com.example.springexample.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
@@ -14,7 +11,14 @@ public class ControllerMainPage {
 
 
     @GetMapping("/")
-    public String signUp() {
+    public String signUp(@CookieValue(value = "id", defaultValue = "default_value")String id, Model model) {
+        if (id.equals("default_value")) {
+            model.addAttribute("signBool", true);
+            model.addAttribute("sign", "Sign Up");
+        }else {
+            model.addAttribute("signBool", false);
+            model.addAttribute("sign", "Sign In");
+        }
         return "index";
     }
 

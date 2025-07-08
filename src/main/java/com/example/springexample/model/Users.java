@@ -2,6 +2,7 @@ package com.example.springexample.model;
 
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -24,5 +25,8 @@ public class Users {
     @Column(name="Password")
     private String password;
 
-
+    public Users(String login, String password) {
+        this.login = login;
+        this.password = password;
+    }
 }

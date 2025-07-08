@@ -17,7 +17,17 @@
         </a>
         <div class="d-flex align-items-center" >
             <span class="navbar-text me-3">zhukovsd</span>
-            <a th:href="@{/sign}" class="btn btn-outline-danger">Sign Up </a>
+            <span th:if="${signBool}" >
+                <a th:href="@{/sign}" class="btn btn-outline-danger">
+                <td th:text="${sign}"></td>
+                 </a>
+            </span>
+            <span th:unless="${signBool}">
+                <a th:href="@{/sign}" class="btn btn-outline-danger">
+                <td th:text="${sign}"></td>
+                 </a>
+            </span>
+
         </div>
     </div>
 </nav>
