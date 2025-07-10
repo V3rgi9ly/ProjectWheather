@@ -4,6 +4,7 @@ import com.example.springexample.dto.UsersDto;
 import com.example.springexample.service.CreateSessionsService;
 import com.example.springexample.service.RegistrationUsersService;
 import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -26,17 +27,24 @@ public class ControllerLogin {
     }
 
     @PostMapping("/login")
-    public String saveData(@RequestParam("Username") String username, @RequestParam("Password") String password,
-                           @RequestParam("RepeatPassword") String repeatPasswor, Model model, HttpServletResponse response) {
+    public String saveData(HttpServletRequest request, Model model, HttpServletResponse response) {
 
-            if (password.equals(repeatPasswor)) {
-               UsersDto usersDto= registrationUsersService.addUsers(username,password);
-                String uuid= createSessionsService.createSessions(usersDto);
-                Cookie cookie = new Cookie("id",uuid);
-            }else {
-                return "sign-up-with-errors";
-            }
+        String username = request.getParameter("username");
+        String password = request.getParameter("password");
+        String repeatPassword = request.getParameter("repeatPassword");
 
-            return "index";
+        if (password.equals(repeatPassword)) {
+            UsersDto usersDto = registrationUsersService.addUsers(username, password);
+            String uuid = createSessionsService.createSessions(usersDto);
+            Cookie cookie = new Cookie("id", uuid);
+            response.addCookie(cookie);
+        }
+        else {
+            return "sign-up-with-errors";
+        }
+
+        return "redirect:/";
     }
+
+
 }
