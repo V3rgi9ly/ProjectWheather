@@ -1,9 +1,11 @@
 package com.example.springexample.controller;
 
 
+import com.example.springexample.dto.SessionsDto;
 import com.example.springexample.service.SessionsService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -52,8 +54,10 @@ public class ControllerMainPage {
         return "redirect:/login-sign-in";
     }
 
-    @GetMapping("/sign-in")
+    @GetMapping("/sign-out")
     public String redirectSignOut(RedirectAttributes model) {
-        return "redirect:/index";
+        return "redirect:/login-sign-in";
     }
+
+
 }

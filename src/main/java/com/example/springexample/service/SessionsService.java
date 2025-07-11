@@ -21,9 +21,7 @@ public class SessionsService {
 
         UUID sessionId = UUID.fromString(sessionValue);
         Sessions session=sessionsRepository.findById(sessionId);
-        SessionsDto  sessionsDto=objectMapper.convertValue(session,SessionsDto.class);
-
-        return sessionsDto;
+        return objectMapper.convertValue(session,SessionsDto.class);
     }
 
     public boolean expireSession(String sessionValue) {
@@ -38,5 +36,13 @@ public class SessionsService {
             return false;
         }
         return false;
+    }
+
+    public String endOfSession(SessionsDto sessionsDto) {
+        Sessions sessions=sessionsRepository.findById(sessionsDto.getId());
+        sessions.setExpiresAt(LocalDateTime.now());
+        SessionsDto  sessionsDto1=objectMapper.convertValue(sessions,SessionsDto.class);
+
+        return sessionsDto1.getId().toString();
     }
 }
