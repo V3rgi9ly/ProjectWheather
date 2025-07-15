@@ -19,14 +19,14 @@ public class UsersService {
     private final SessionsRepository sessionsRepository;
     private final ObjectMapper objectMapper;
 
-    public Users sessionAvailabilityCheck(String id) {
-        UUID uuid = UUID.fromString(id);
-        Sessions session = sessionsRepository.findById(uuid);
-        return usersRepository.findById(session.getUserId());
+    public UsersDto getUser(String username) {
+        Users user=usersRepository.findByLogin(username);
+        return objectMapper.convertValue(user, UsersDto.class);
 
     }
 
-    public boolean dataVerification(Users user, String username, String password) {
+    public boolean dataVerification( String username, String password) {
+        Users user=usersRepository.findByLogin(username);
 
         if (user.getLogin().equals(username) && user.getPassword().equals(password)) {
             return true;

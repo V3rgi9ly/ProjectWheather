@@ -20,7 +20,7 @@
             <span class="navbar-text me-3">zhukovsd</span>
 
             <span th:switch="${authorization}">
-                <a th:case="signOut" th:href="@{/sign-out}" class="btn btn-outline-danger"> Sign Out</a>
+                <a th:case="signOut" th:href="@{/logOut}" class="btn btn-outline-danger"> Sign Out</a>
                 <a th:case="signIn" th:href="@{/sign-in}" class="btn btn-outline-danger"> Sign In</a>
                 <a th:case="signUp" th:href="@{/sign-up}" class="btn btn-outline-danger"> Sign Up</a>
             </span>

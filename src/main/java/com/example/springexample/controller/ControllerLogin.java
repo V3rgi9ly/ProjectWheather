@@ -77,9 +77,8 @@ public class ControllerLogin {
             }
         }
 
-        Users user=usersService.sessionAvailabilityCheck(id);
-        UsersDto usersDto=objectMapper.convertValue(user, UsersDto.class);
-        if (usersService.dataVerification(user, username, password)) {
+        UsersDto usersDto=usersService.getUser(username);
+        if (usersService.dataVerification(username, password)) {
            String uuid= createSessionsService.createSessions(usersDto);
            response.addCookie(new Cookie("id", uuid));
         }else {
@@ -90,9 +89,8 @@ public class ControllerLogin {
     }
 
 
-
-    @PostMapping ("/index")
-    public String SignOut(HttpServletRequest request, HttpServletResponse response) {
+    @GetMapping("/logOut")
+    public String logOut(HttpServletRequest request, HttpServletResponse response) {
         Cookie[] cookie=request.getCookies();
         String id="";
         if(cookie != null){
@@ -102,10 +100,12 @@ public class ControllerLogin {
                 }
             }
         }
-        SessionsDto sessionsDto=sessionsService.getSession(id);
-        String uuid=sessionsService.endOfSession(sessionsDto);
-        Cookie cookie1=new Cookie("id",uuid);
-        response.addCookie(cookie1);
+        sessionsService.deleteSession(id);
+//        response.addCookie(new Cookie("id", id));
         return "redirect:/index";
     }
+
+
+
+
 }

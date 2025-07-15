@@ -45,17 +45,12 @@ public class ControllerMainPage {
 
 
     @GetMapping("/sign-up")
-    public String redirectSignUp(RedirectAttributes model) {
+    public String redirectSignUp() {
         return "redirect:/login";
     }
 
     @GetMapping("/sign-in")
-    public String redirectSignIn(RedirectAttributes model) {
-        return "redirect:/login-sign-in";
-    }
-
-    @GetMapping("/sign-out")
-    public String redirectSignOut(RedirectAttributes model) {
+    public String redirectSignIn() {
         return "redirect:/login-sign-in";
     }
 
