@@ -63,7 +63,7 @@ public class ControllerLogin {
     }
 
     @PostMapping("/login-sign-in")
-    public String authorizationInput(HttpServletRequest request, Model model, HttpServletResponse response){
+    public String authorizationInput(HttpServletRequest request, HttpServletResponse response){
         String username = request.getParameter("username");
         String password = request.getParameter("password");
         Cookie[] cookie=request.getCookies();

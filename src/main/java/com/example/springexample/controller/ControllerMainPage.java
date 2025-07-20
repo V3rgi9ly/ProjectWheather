@@ -6,6 +6,7 @@ import com.example.springexample.service.SessionsService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,8 +20,8 @@ public class ControllerMainPage {
     private final SessionsService sessionsService;
 
     @GetMapping("/index")
-    public String signUp( Model model, HttpServletRequest request) {
-        String id="";
+    public String signUp(Model model, HttpServletRequest request) {
+        String id = "";
         Cookie[] cookies = request.getCookies();
         if (cookies != null) {
             for (Cookie cookie : cookies) {
@@ -29,13 +30,12 @@ public class ControllerMainPage {
                 }
             }
 
-            if (sessionsService.expireSession(id)){
+            if (sessionsService.expireSession(id)) {
                 model.addAttribute("authorization", "signIn");
-            }
-            else {
+            } else {
                 model.addAttribute("authorization", "signOut");
             }
-        }else {
+        } else {
             model.addAttribute("authorization", "signUp");
         }
 
@@ -52,6 +52,13 @@ public class ControllerMainPage {
     @GetMapping("/sign-in")
     public String redirectSignIn() {
         return "redirect:/login-sign-in";
+    }
+
+    @GetMapping("/Search")
+    public String redirectSearch(@ModelAttribute ("name") String userInput, RedirectAttributes redirectAttributes) {
+        redirectAttributes.addAttribute("name", userInput);
+        redirectAttributes.addAttribute("value", userInput);
+        return "redirect:/search-results";
     }
 
 
