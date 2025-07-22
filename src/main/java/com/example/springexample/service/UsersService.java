@@ -1,16 +1,12 @@
 package com.example.springexample.service;
 
 import com.example.springexample.dto.UsersDto;
-import com.example.springexample.dto.VerificationUserDto;
-import com.example.springexample.model.Sessions;
 import com.example.springexample.model.Users;
 import com.example.springexample.repository.SessionsRepository;
 import com.example.springexample.repository.UsersRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
-import java.util.UUID;
 
 @RequiredArgsConstructor
 @Service

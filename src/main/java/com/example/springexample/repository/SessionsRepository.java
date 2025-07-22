@@ -9,4 +9,6 @@ public interface SessionsRepository extends JpaRepository<Sessions, Long> {
     Sessions findById(UUID uuid);
 
     Sessions deleteById(UUID id);
+
+    Sessions getById(UUID uuid);
 }

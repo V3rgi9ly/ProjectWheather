@@ -9,9 +9,9 @@ import org.springframework.web.reactive.function.client.WebClient;
 public class AppConfig {
 
 
-//    @Bean
-//    public WebClient beanRestTemplate() {
-//        return  WebClient.builder().baseUrl("http://localhost:8082/index").build();
-//    }
+    @Bean
+    public WebClient beanRestTemplate() {
+        return  WebClient.builder().baseUrl("http://localhost:8082/index").build();
+    }
 
 }

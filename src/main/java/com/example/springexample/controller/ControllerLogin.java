@@ -1,9 +1,6 @@
 package com.example.springexample.controller;
 
-import com.example.springexample.dto.SessionsDto;
 import com.example.springexample.dto.UsersDto;
-import com.example.springexample.dto.VerificationUserDto;
-import com.example.springexample.model.Users;
 import com.example.springexample.service.CreateSessionsService;
 import com.example.springexample.service.RegistrationUsersService;
 import com.example.springexample.service.SessionsService;
@@ -15,10 +12,8 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 @RequiredArgsConstructor
