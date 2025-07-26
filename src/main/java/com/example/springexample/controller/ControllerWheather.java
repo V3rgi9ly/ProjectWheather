@@ -54,8 +54,9 @@ public class ControllerWheather {
                     }
                 }
             }
+            boolean duplicate = locationService.сheckingForDuplicates(Optional.of(weather.get()), id);
             List<WeathersDto> listWeatherDto = locationService.getWeather(id);
-            if (listWeatherDto.size() >= 5) {
+            if (listWeatherDto.size() >= 5 || !duplicate) {
                 return "error";
             }else {
                 locationService.saveLocation(weather.get(), id);

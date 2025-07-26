@@ -64,6 +64,21 @@ public class LocationService {
         Locations locations = locationsRepository.findByName(name);
 
         locationsRepository.deleteById((long) locations.getId());
+    }
+
+    public boolean сheckingForDuplicates(Optional<WeathersDto> weathersDto, String id){
+        UUID uuid = UUID.fromString(id);
+        Sessions sessions = sessionsRepository.findById(uuid);
+        Optional<Locations> locations= Optional.ofNullable(locationsRepository.findByName(weathersDto.get().getName()));
+        if (locations.isPresent()){
+            if (weathersDto.get().getName().equals(locations.get().getName()) && locations.get().getUserId()== sessions.getUserId() ){
+                return false;
+            } else {
+                return true;
+            }
+        }else {
+            return true;
+        }
 
     }
 }

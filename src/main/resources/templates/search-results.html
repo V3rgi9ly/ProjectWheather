@@ -15,10 +15,12 @@
                  class="d-inline-block align-text-top">
             Weather Tracker
         </a>
-        <div class="d-flex align-items-center">
-            <span class="navbar-text me-3">zhukovsd</span>
-            <button class="btn btn-outline-danger">Sign out</button>
-        </div>
+        <form th:action="@{/logOut}" method="get">
+            <div class="d-flex align-items-center">
+                <span class="navbar-text me-3">zhukovsd</span>
+                <button class="btn btn-outline-danger">Sign out</button>
+            </div>
+        </form>
     </div>
 </nav>
 
@@ -30,7 +32,7 @@
                 <div class="input-group location-search-input-group me-3">
                     <input class="form-control" type="text" name="name" placeholder="Enter location" th:value="${name}"
                            required>
-                    <input type="hidden" name="authorization" th:value="${authorization}" />
+                    <input type="hidden" name="authorization" th:value="${authorization}"/>
                     <button class="btn btn-outline-secondary btn-sm clear-input-button" type="button"
                             onclick="this.previousElementSibling.value=''">
                         &times;
