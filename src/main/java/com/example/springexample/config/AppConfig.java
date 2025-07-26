@@ -10,8 +10,8 @@ public class AppConfig {
 
 
     @Bean
-    public WebClient beanRestTemplate() {
-        return  WebClient.builder().baseUrl("http://localhost:8082/index").build();
+    public WebClient.Builder beanRestTemplate() {
+        return  WebClient.builder();
     }
 
 }

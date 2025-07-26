@@ -6,8 +6,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.List;
-
 
 @Getter
 @Setter
@@ -16,26 +14,45 @@ import java.util.List;
 public class WeathersDto {
 
 
-    @JsonProperty("coord")
-    private CoordinateDto coordinate;
+    @JsonProperty("lat")
+    private double latitude;
+    @JsonProperty("lon")
+    private double longitude;
 
-    @JsonProperty("weather")
-    private List<WeatherDto> weather;
+    @JsonProperty("main")
+    private String mainConditionWeather;
+
+    @JsonProperty("icon")
+    private String iconWeather;
+
+    @JsonProperty("description")
+    private String description;
 
     @JsonProperty("name")
     private String name;
 
-    @JsonProperty("main")
-    private WeatherConditionsDto weatherConditionsDto;
+    @JsonProperty("temp")
+    private double temperature;
+
+    @JsonProperty("humidity")
+    private int humidity;
+
+    @JsonProperty("feels_like")
+    private double feels_like_temperature;
 
 
     @Override
     public String toString() {
         return "WeathersDto{" +
-                "coordinate=" + coordinate +
-                ", weather=" + weather +
+                "latitude=" + latitude +
+                ", longitude=" + longitude +
+                ", mainConditionWeather='" + mainConditionWeather + '\'' +
+                ", iconWeather='" + iconWeather + '\'' +
+                ", description='" + description + '\'' +
                 ", name='" + name + '\'' +
-                ", weatherConditionsDto=" + weatherConditionsDto +
+                ", temperature=" + temperature +
+                ", humidity=" + humidity +
+                ", feels_like_temperature=" + feels_like_temperature +
                 '}';
     }
 }

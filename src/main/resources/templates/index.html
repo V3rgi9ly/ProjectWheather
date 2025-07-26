@@ -20,7 +20,7 @@
             <span class="navbar-text me-3">zhukovsd</span>
 
             <span th:switch="${authorization}">
-                <a th:case="signOut" th:href="@{/logOut}" class="btn btn-outline-danger"> Sign Out</a>
+                <a th:case="signOut"  th:href="@{/logOut}" class="btn btn-outline-danger"> Sign Out</a>
                 <a th:case="signIn" th:href="@{/sign-in}" class="btn btn-outline-danger"> Sign In</a>
                 <a th:case="signUp" th:href="@{/sign-up}" class="btn btn-outline-danger"> Sign Up</a>
             </span>
@@ -34,34 +34,44 @@
             <div class="d-flex my-4">
                 <div class="input-group location-search-input-group me-3">
                     <input class="form-control" type="text" name="name" placeholder="Enter location" required>
+                    <input type="hidden" name="authorization" th:value="${authorization}" />
                     <button class="btn btn-outline-secondary btn-sm clear-input-button" type="button"
                             onclick="this.previousElementSibling.value=''">
                         &times;
                     </button>
                 </div>
-                <button th:href="@{/Search}" class="btn btn-outline-success">Search</button>
+                <button class="btn btn-outline-success">Search</button>
             </div>
         </form>
 
         <div>
             <div class="row">
-                <div class="col-12 col-lg-3 col-md-6 mb-4">
-                    <div class="card h-100 position-relative geoCity-card">
-                        <div class="position-absolute geoCity-card-delete-form">
-                            <button class="btn-close" aria-label="Delete"></button>
+                <div class="col-12 col-lg-3 col-md-6 mb-4" th:each="weather: ${weathers}">
+                    <form th:action="@{/delete}" method="post">
+                        <div class="card h-100 position-relative geoCity-card">
+
+                            <div class="position-absolute geoCity-card-delete-form">
+                                <button class="btn-close" aria-label="Delete"></button>
+                            </div>
+
+
+                            <img class="card-img-top img-fluid"
+                                 th:src="@{'https://openweathermap.org/img/wn/' + ${weather.iconWeather}+'.png'}"
+                                 alt="Weather icon">
+                            <div class="card-body d-flex flex-column">
+                                <h1 th:text="${weather.temperature}+'°C'" class="card-text"></h1>
+                                <h3 th:text="'City:'+${weather.name}" class="card-title"></h3>
+                                <p th:text="'Feels like:'+${weather.feels_like_temperature}+ '°C'"
+                                   class="card-text mb-1">
+                                    <span></span>.
+                                    <span>Clear sky</span>
+                                </p>
+                                <p th:text="'Humidity:'+${weather.humidity}+ '%'" class="card-text mb-1"></p>
+                            </div>
+                            <input type="hidden" name="name" th:value="${weather.name}">
                         </div>
-                        <img class="card-img-top img-fluid"
-                             src="https://openweathermap.org/img/wn/01n@4x.png"
-                             alt="Weather icon">
-                        <div class="card-body d-flex flex-column">
-                            <h1 class="card-text">7°C</h1>
-                            <h3 class="card-title">Tbilisi, GE</h3>
-                            <p class="card-text mb-1">Feels like <span>2</span>°C.
-                                <span>Clear sky</span>
-                            </p>
-                            <p class="card-text mb-1">Humidity: 70%</p>
-                        </div>
-                    </div>
+                    </form>
+
                 </div>
             </div>
         </div>

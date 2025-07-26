@@ -22,7 +22,6 @@ public class ControllerLogin {
     private final RegistrationUsersService registrationUsersService;
     private final CreateSessionsService createSessionsService;
     private final UsersService usersService;
-    private final ObjectMapper objectMapper;
     private final SessionsService sessionsService;
 
     @GetMapping("/login")

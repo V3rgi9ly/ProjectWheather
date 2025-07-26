@@ -1,7 +1,7 @@
 package com.example.springexample.dto;
 
 
-import com.example.springexample.model.GeocodingModel.Country;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
@@ -19,18 +19,21 @@ public class GeoCityDto {
     @JsonProperty("name")
     private String city;
 
-    @JsonProperty("sys")
-    private Country country;
+    @JsonProperty("country")
+    private String country;
 
-    @JsonProperty("coord")
-    private CoordinateDto coordinate;
+    @JsonProperty("lat")
+    private double latitude;
+    @JsonProperty("lon")
+    private double longitude;
 
     @Override
     public String toString() {
-        return "Weather{" +
-                ", city='" + city + '\'' +
-                ", coordinate=" + coordinate +
+        return "GeoCityDto{" +
+                "city='" + city + '\'' +
                 ", country='" + country + '\'' +
+                ", latitude=" + latitude +
+                ", longitude=" + longitude +
                 '}';
     }
 }

@@ -10,6 +10,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -17,6 +20,7 @@ import java.util.UUID;
 public class LocationService {
     private final LocationsRepository locationsRepository;
     private final SessionsRepository sessionsRepository;
+    private final WheatherService wheatherService;
     private final ObjectMapper objectMapper;
 
     public void saveLocation(WeathersDto weathersDto, String id) {
@@ -25,10 +29,41 @@ public class LocationService {
         Sessions sessions = sessionsRepository.findById(uuid);
         Locations locations = new Locations();
         locations.setName(weathersDto.getName());
-        locations.setLatitude(BigDecimal.valueOf(weathersDto.getCoordinate().getLatitude()));
-        locations.setLongitude(BigDecimal.valueOf(weathersDto.getCoordinate().getLongitude()));
+        locations.setLatitude(BigDecimal.valueOf(weathersDto.getLatitude()));
+        locations.setLongitude(BigDecimal.valueOf(weathersDto.getLongitude()));
         locations.setUserId(sessions.getUserId());
 
         locationsRepository.save(locations);
+    }
+
+    public List<WeathersDto> getWeather(String id) {
+        UUID uuid = UUID.fromString(id);
+        Sessions sessions = sessionsRepository.findById(uuid);
+        List<Locations> locations=locationsRepository.findByUserId(sessions.getUserId());
+        List<Optional<WeathersDto>> listWeatherDto = new ArrayList<>();
+        Optional<WeathersDto> weathersDto;
+
+        for (Locations location : locations) {
+            weathersDto=wheatherService.getWeather(Double.parseDouble(String.valueOf(location.getLatitude())), Double.parseDouble(String.valueOf(location.getLongitude())));
+            listWeatherDto.add(weathersDto);
+        }
+
+
+        List<WeathersDto> unpackedWeatherDtos = listWeatherDto.stream()
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .toList();
+
+
+        return unpackedWeatherDtos;
+    }
+
+    public void deleteLocation(String name, String cookie) {
+        UUID uuid = UUID.fromString(cookie);
+        Sessions sessions = sessionsRepository.findById(uuid);
+        Locations locations = locationsRepository.findByName(name);
+
+        locationsRepository.deleteById((long) locations.getId());
+
     }
 }
