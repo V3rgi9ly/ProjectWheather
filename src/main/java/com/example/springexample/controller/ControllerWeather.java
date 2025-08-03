@@ -1,11 +1,10 @@
 package com.example.springexample.controller;
 
 
-import com.example.springexample.dto.CoordinateDto;
 import com.example.springexample.dto.GeoCityDto;
 import com.example.springexample.dto.WeathersDto;
 import com.example.springexample.service.LocationService;
-import com.example.springexample.service.WheatherService;
+import com.example.springexample.service.WeatherService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -14,36 +13,27 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 @Controller
 @RequiredArgsConstructor
-public class ControllerWheather {
-    private final WheatherService weatherService;
+public class ControllerWeather {
+    private final WeatherService weatherService;
     private final LocationService locationService;
 
 
     @GetMapping("/search-results")
     public String searchResults(@ModelAttribute("name") String userInput, Model model) {
         List<GeoCityDto> geoCity = weatherService.getGeoCity(userInput);
-//        GeoCityDto weatherDto = geoCity.get();
-
         model.addAttribute("weatherDto", geoCity);
-//        model.addAttribute("city", weatherDto.getCity());
-//        model.addAttribute("Latitude", weatherDto.getCoordinate().getLatitude());
-//        model.addAttribute("Longitude", weatherDto.getCoordinate().getLongitude());
-//        model.addAttribute("Country", weatherDto.getCountry().getCountry());
         return "search-results";
     }
 
 
     @PostMapping("/search-results")
-    public String addWeather(@ModelAttribute CoordinateDto coordinateDto, HttpServletRequest request) {
-        Optional<WeathersDto> weather = weatherService.getWeather(coordinateDto.getLatitude(), coordinateDto.getLongitude());
+    public String addWeather(@ModelAttribute WeathersDto weathersDto, HttpServletRequest request) {
+        Optional<WeathersDto> weather = weatherService.getWeather(weathersDto.getLatitude(), weathersDto.getLongitude());
         String id = "";
         if (weather.isPresent()) {
             Cookie[] cookies = request.getCookies();

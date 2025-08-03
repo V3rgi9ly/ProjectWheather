@@ -1,7 +1,6 @@
 package com.example.springexample.controller;
 
 
-import com.example.springexample.dto.CoordinateDto;
 import com.example.springexample.dto.WeathersDto;
 import com.example.springexample.service.LocationService;
 import com.example.springexample.service.SessionsService;
@@ -14,7 +13,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
-import java.util.Optional;
 
 @Controller
 @RequiredArgsConstructor
@@ -48,13 +46,9 @@ public class ControllerMainPage {
                 }
 
             }
-
-
         } else {
             model.addAttribute("authorization", "signUp");
         }
-
-
 
         return "index";
     }

@@ -1,11 +1,11 @@
 package com.example.springexample.service;
 
-import com.example.springexample.dto.SessionsDto;
+import com.example.springexample.dto.UsersDto;
 import com.example.springexample.model.Sessions;
+import com.example.springexample.model.Users;
 import com.example.springexample.repository.SessionsRepository;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.example.springexample.repository.UsersRepository;
 import lombok.RequiredArgsConstructor;
-import org.hibernate.Session;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -16,13 +16,19 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class SessionsService {
     private final SessionsRepository sessionsRepository;
-    private final ObjectMapper objectMapper;
+    private final UsersRepository usersRepository;
 
-    public SessionsDto getSession(String sessionValue) {
-
-        UUID sessionId = UUID.fromString(sessionValue);
-        Sessions session=sessionsRepository.findById(sessionId);
-        return objectMapper.convertValue(session,SessionsDto.class);
+    public String createSessions(UsersDto usersDto) {
+        LocalDateTime localDateTime = LocalDateTime.now();
+        UUID uuid = UUID.randomUUID();
+        if (usersRepository.findById(usersDto.getId())==null) {
+            throw new IllegalArgumentException("user is absent");
+        }else {
+            Users user = usersRepository.findById(usersDto.getId());
+            Sessions sessions = new Sessions(uuid, localDateTime.plusMinutes(30), user);
+            sessionsRepository.save(sessions);
+        }
+        return uuid.toString();
     }
 
     public boolean expireSession(String sessionValue) {
@@ -39,10 +45,8 @@ public class SessionsService {
 
     }
 
-
-
     @Scheduled(cron = "0 30 * * * ?")
-    public void endOfSession() {
+    private void endOfSession() {
         sessionsRepository.deleteAll();
     }
 
@@ -52,6 +56,11 @@ public class SessionsService {
         Sessions session=sessionsRepository.findById(sessionId);
         if (session==null) {
             return;
+        }
+
+        Users user = session.getUser();
+        if (user != null) {
+            user.setSessions(null);
         }
         sessionsRepository.delete(session);
     }

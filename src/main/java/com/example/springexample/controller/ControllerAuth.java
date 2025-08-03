@@ -1,11 +1,8 @@
 package com.example.springexample.controller;
 
 import com.example.springexample.dto.UsersDto;
-import com.example.springexample.service.CreateSessionsService;
-import com.example.springexample.service.RegistrationUsersService;
 import com.example.springexample.service.SessionsService;
 import com.example.springexample.service.UsersService;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -17,10 +14,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 @Controller
 @RequiredArgsConstructor
-public class ControllerLogin {
+public class ControllerAuth {
 
-    private final RegistrationUsersService registrationUsersService;
-    private final CreateSessionsService createSessionsService;
     private final UsersService usersService;
     private final SessionsService sessionsService;
 
@@ -37,8 +32,8 @@ public class ControllerLogin {
         String repeatPassword = request.getParameter("repeatPassword");
 
         if (password.equals(repeatPassword)) {
-            UsersDto usersDto = registrationUsersService.addUsers(username, password);
-            String uuid = createSessionsService.createSessions(usersDto);
+            UsersDto usersDto = usersService.addUsers(username, password);
+            String uuid = sessionsService.createSessions(usersDto);
             Cookie cookie = new Cookie("id", uuid);
             response.addCookie(cookie);
         }
@@ -60,20 +55,10 @@ public class ControllerLogin {
     public String authorizationInput(HttpServletRequest request, HttpServletResponse response){
         String username = request.getParameter("username");
         String password = request.getParameter("password");
-        Cookie[] cookie=request.getCookies();
-        String id="";
-
-        if(cookie != null){
-            for(Cookie c:cookie){
-                if(c.getName().equals("id")){
-                    id=c.getValue();
-                }
-            }
-        }
 
         UsersDto usersDto=usersService.getUser(username);
         if (usersService.dataVerification(username, password)) {
-           String uuid= createSessionsService.createSessions(usersDto);
+           String uuid= sessionsService.createSessions(usersDto);
            response.addCookie(new Cookie("id", uuid));
         }else {
             return "sign-in-with-errors";
@@ -84,7 +69,7 @@ public class ControllerLogin {
 
 
     @GetMapping("/logOut")
-    public String logOut(HttpServletRequest request, HttpServletResponse response) {
+    public String logOut(HttpServletRequest request) {
         Cookie[] cookie=request.getCookies();
         String id="";
         if(cookie != null){
@@ -95,7 +80,6 @@ public class ControllerLogin {
             }
         }
         sessionsService.deleteSession(id);
-//        response.addCookie(new Cookie("id", id));
         return "redirect:/index";
     }
 

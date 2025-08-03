@@ -13,5 +13,4 @@ public class AppConfig {
     public WebClient.Builder beanRestTemplate() {
         return  WebClient.builder();
     }
-
 }

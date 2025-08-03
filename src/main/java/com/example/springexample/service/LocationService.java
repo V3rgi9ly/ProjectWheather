@@ -1,11 +1,11 @@
 package com.example.springexample.service;
 
 import com.example.springexample.dto.WeathersDto;
+import com.example.springexample.mapper.Mapping;
 import com.example.springexample.model.Locations;
 import com.example.springexample.model.Sessions;
 import com.example.springexample.repository.LocationsRepository;
 import com.example.springexample.repository.SessionsRepository;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -20,18 +20,15 @@ import java.util.UUID;
 public class LocationService {
     private final LocationsRepository locationsRepository;
     private final SessionsRepository sessionsRepository;
-    private final WheatherService wheatherService;
-    private final ObjectMapper objectMapper;
+    private final WeatherService weatherService;
+    private  final Mapping mapping=Mapping.mapping;
 
     public void saveLocation(WeathersDto weathersDto, String id) {
 
         UUID uuid = UUID.fromString(id);
         Sessions sessions = sessionsRepository.findById(uuid);
-        Locations locations = new Locations();
-        locations.setName(weathersDto.getName());
-        locations.setLatitude(BigDecimal.valueOf(weathersDto.getLatitude()));
-        locations.setLongitude(BigDecimal.valueOf(weathersDto.getLongitude()));
-        locations.setUserId(sessions.getUserId());
+        Locations locations= mapping.toLocationsDto(weathersDto);
+        locations.setUser(sessions.getUser());
 
         locationsRepository.save(locations);
     }
@@ -39,15 +36,14 @@ public class LocationService {
     public List<WeathersDto> getWeather(String id) {
         UUID uuid = UUID.fromString(id);
         Sessions sessions = sessionsRepository.findById(uuid);
-        List<Locations> locations=locationsRepository.findByUserId(sessions.getUserId());
+        List<Locations> locations=locationsRepository.findByUserId(sessions.getUser().getId());
         List<Optional<WeathersDto>> listWeatherDto = new ArrayList<>();
         Optional<WeathersDto> weathersDto;
 
         for (Locations location : locations) {
-            weathersDto=wheatherService.getWeather(Double.parseDouble(String.valueOf(location.getLatitude())), Double.parseDouble(String.valueOf(location.getLongitude())));
+            weathersDto= weatherService.getWeather(Double.parseDouble(String.valueOf(location.getLatitude())), Double.parseDouble(String.valueOf(location.getLongitude())));
             listWeatherDto.add(weathersDto);
         }
-
 
         List<WeathersDto> unpackedWeatherDtos = listWeatherDto.stream()
                 .filter(Optional::isPresent)
@@ -59,10 +55,7 @@ public class LocationService {
     }
 
     public void deleteLocation(String name, String cookie) {
-        UUID uuid = UUID.fromString(cookie);
-        Sessions sessions = sessionsRepository.findById(uuid);
         Locations locations = locationsRepository.findByName(name);
-
         locationsRepository.deleteById((long) locations.getId());
     }
 
@@ -71,7 +64,7 @@ public class LocationService {
         Sessions sessions = sessionsRepository.findById(uuid);
         Optional<Locations> locations= Optional.ofNullable(locationsRepository.findByName(weathersDto.get().getName()));
         if (locations.isPresent()){
-            if (weathersDto.get().getName().equals(locations.get().getName()) && locations.get().getUserId()== sessions.getUserId() ){
+            if (weathersDto.get().getName().equals(locations.get().getName()) && locations.get().getUser().getId()== sessions.getUser().getId() ){
                 return false;
             } else {
                 return true;

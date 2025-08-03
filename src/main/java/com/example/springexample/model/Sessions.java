@@ -1,17 +1,13 @@
 package com.example.springexample.model;
 
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.UUID;
 
 @Entity
@@ -26,10 +22,11 @@ public class Sessions {
     @Column(name = "ID")
     private UUID id;
 
-    @Column(name = "UserId")
-    private int userId;
-
     @Column(name = "ExpiresAt")
     private LocalDateTime expiresAt;
+
+    @OneToOne()
+    @JoinColumn(name = "user_id")
+    private Users user;
 
 }
