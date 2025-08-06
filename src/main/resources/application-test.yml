@@ -1,0 +1,17 @@
+spring:
+  config:
+    activate:
+      on-profile: test
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/postgres
+    username: postgres
+    password: Serega9900
+    hikari:
+      connection-init-sql: SET search_path TO test
+  jpa:
+    hibernate:
+      ddl-auto: create
+    show-sql: true
+  flyway:
+    enabled: false

@@ -3,7 +3,6 @@
   <component name="SqlDialectMappings">
     <file url="file://$PROJECT_DIR$/src/main/resources/db/migration/V1__Create_test_table.sql" dialect="PostgreSQL" />
     <file url="file://$PROJECT_DIR$/src/main/resources/db/migration/V2__AlterTable_AlterColumn_ExpiresAt.sql" dialect="PostgreSQL" />
-    <file url="file://$PROJECT_DIR$/src/main/resources/db/migration/V3__Change_Properties_Field.sql" dialect="PostgreSQL" />
     <file url="file://$PROJECT_DIR$/src/main/resources/db/migration/V4__.sql" dialect="PostgreSQL" />
     <file url="PROJECT" dialect="PostgreSQL" />
   </component>

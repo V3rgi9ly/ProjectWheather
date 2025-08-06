@@ -20,7 +20,7 @@ public class ControllerAuth {
     private final SessionsService sessionsService;
 
     @GetMapping("/login")
-    public String login(Model model) {
+    public String login() {
         return "sign-up";
     }
 

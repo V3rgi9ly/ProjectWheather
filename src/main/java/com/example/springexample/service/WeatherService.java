@@ -1,10 +1,12 @@
 package com.example.springexample.service;
 
+import com.example.springexample.config.WeatherConfiguration;
 import com.example.springexample.dto.GeoCityDto;
 import com.example.springexample.dto.WeathersDto;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClientRequestException;
@@ -20,31 +22,41 @@ public class WeatherService {
     private final String WEATHER_API_KEY = "7a5864eb5cac7c74e9bc2a2e3a5023bf";
     private final WebClient webClient;
     private final ObjectMapper objectMapper;
+    private final WeatherConfiguration weatherConfiguration;
 
     @Autowired
-    public WeatherService(WebClient.Builder clientBuilder, ObjectMapper objectMapper) {
-        this.webClient = clientBuilder.build();
+    public WeatherService(WebClient webClient, ObjectMapper objectMapper, WeatherConfiguration weatherConfiguration) {
+        this.webClient = webClient;
         this.objectMapper = objectMapper;
+        this.weatherConfiguration = weatherConfiguration;
 
     }
 
-    public List<GeoCityDto> getGeoCity(String city) {
-        try {
+    public List<GeoCityDto> getGeoCity(String city){
 
-            String jsonpObject = WebClient.create("https://api.openweathermap.org").get().
+        System.out.println("Using baseUrl: " + weatherConfiguration.getBaseUrl());
+        System.out.println("Using API key: " + weatherConfiguration.getKey());
+
+        try {
+            String jsonpObject = webClient.get().
                     uri(uriBuilder -> uriBuilder
                             .path("/geo/1.0/direct")
                             .queryParam("q", city)
                             .queryParam("limit", 5)
-                            .queryParam("appid", WEATHER_API_KEY)
+                            .queryParam("appid", weatherConfiguration.getKey())
                             .build())
                     .retrieve()
                     .bodyToMono(String.class).block();
 
 
+
             System.out.println(jsonpObject);
             JsonNode locations = objectMapper.readTree(jsonpObject);
             System.out.println(locations);
+
+            if (!locations.isArray() || locations.isEmpty()) {
+                throw new IllegalStateException("Город не найден в ответе OpenWeather");
+            }
 
             List<Optional<GeoCityDto>> geoCityDtoList = new ArrayList<>();
             for (JsonNode node : locations) {
@@ -64,7 +76,13 @@ public class WeatherService {
 
             System.out.println(unpackedWeatherDtos);
             return unpackedWeatherDtos;
-        } catch (Exception e) {
+        }catch (IllegalStateException e) {
+            throw new IllegalStateException("Город не найден в ответе OpenWeather");
+        }
+        catch (WebClientResponseException e){
+            throw new IllegalStateException("Город не найден в ответе OpenWeather");
+        }
+        catch (Exception e) {
             e.printStackTrace();
             return null;
         }
@@ -77,16 +95,28 @@ public class WeatherService {
         }
 
         try {
-            String jsonpObject = WebClient.create("https://api.openweathermap.org").get().
+
+            String jsonpObject = webClient.get().
                     uri(uriBuilder -> uriBuilder
                             .path("/data/2.5/weather")
                             .queryParam("lat", lat)
                             .queryParam("lon", lon)
                             .queryParam("units", "metric")
-                            .queryParam("appid", WEATHER_API_KEY)
+                            .queryParam("appid", weatherConfiguration.getKey())
                             .build())
                     .retrieve()
                     .bodyToMono(String.class).block();
+
+//            String jsonpObject = WebClient.create("https://api.openweathermap.org").get().
+//                    uri(uriBuilder -> uriBuilder
+//                            .path("/data/2.5/weather")
+//                            .queryParam("lat", lat)
+//                            .queryParam("lon", lon)
+//                            .queryParam("units", "metric")
+//                            .queryParam("appid", WEATHER_API_KEY)
+//                            .build())
+//                    .retrieve()
+//                    .bodyToMono(String.class).block();
 
 
             JsonNode jsonNode = objectMapper.readTree(jsonpObject);
@@ -103,8 +133,10 @@ public class WeatherService {
 
             return Optional.of(dto);
         } catch (WebClientResponseException e) {
-            System.err.println("OpenWeather API returned error: " + e.getStatusCode() + " " + e.getResponseBodyAsString());
-            throw new IllegalStateException("Ошибка API: " + e.getMessage(), e);
+            if (e.getStatusCode().value() == 500) {
+                throw new IllegalStateException("Ошибка сервера OpenWeather", e);
+            }
+            throw e;
         } catch (WebClientRequestException e) {
             System.err.println("Request to OpenWeather failed: " + e.getMessage());
             throw new IllegalStateException("Ошибка подключения к OpenWeather API", e);

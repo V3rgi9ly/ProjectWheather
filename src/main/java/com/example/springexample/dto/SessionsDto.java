@@ -13,6 +13,5 @@ import java.util.UUID;
 @Setter
 @NoArgsConstructor
 public class SessionsDto {
-
     private UUID id;
 }

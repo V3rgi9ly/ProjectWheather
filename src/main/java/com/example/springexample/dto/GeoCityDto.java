@@ -9,6 +9,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.Locale;
+
 @Getter
 @Setter
 @AllArgsConstructor
@@ -29,11 +31,8 @@ public class GeoCityDto {
 
     @Override
     public String toString() {
-        return "GeoCityDto{" +
-                "city='" + city + '\'' +
-                ", country='" + country + '\'' +
-                ", latitude=" + latitude +
-                ", longitude=" + longitude +
-                '}';
+        return String.format(Locale.US,  // Используем точку в качестве разделителя
+                "GeoCityDto{city='%s', country='%s', latitude=%.4f, longitude=%.4f}",
+                city, country, latitude, longitude);
     }
 }
