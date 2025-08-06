@@ -5,11 +5,10 @@ import com.example.springexample.dto.GeoCityDto;
 import com.example.springexample.dto.WeathersDto;
 import com.example.springexample.service.LocationService;
 import com.example.springexample.service.WeatherService;
-import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -32,24 +31,17 @@ public class ControllerWeather {
 
 
     @PostMapping("/search-results")
-    public String addWeather(@ModelAttribute WeathersDto weathersDto, HttpServletRequest request) {
+    public String addWeather(@ModelAttribute WeathersDto weathersDto, @CookieValue(value = "id", required = false) String id) {
         Optional<WeathersDto> weather = weatherService.getWeather(weathersDto.getLatitude(), weathersDto.getLongitude());
-        String id = "";
         if (weather.isPresent()) {
-            Cookie[] cookies = request.getCookies();
-            if (cookies != null) {
-                for (Cookie cookie : cookies) {
-                    if (cookie.getName().equals("id")) {
-                        id = cookie.getValue();
-                    }
+            if (id != null) {
+                boolean duplicate = locationService.сheckingForDuplicates(Optional.of(weather.get()), id);
+                List<WeathersDto> listWeatherDto = locationService.getWeather(id);
+                if (listWeatherDto.size() >= 5 || !duplicate) {
+                    return "error";
+                }else {
+                    locationService.saveLocation(weather.get(), id);
                 }
-            }
-            boolean duplicate = locationService.сheckingForDuplicates(Optional.of(weather.get()), id);
-            List<WeathersDto> listWeatherDto = locationService.getWeather(id);
-            if (listWeatherDto.size() >= 5 || !duplicate) {
-                return "error";
-            }else {
-                locationService.saveLocation(weather.get(), id);
             }
             return "redirect:/index";
         } else {

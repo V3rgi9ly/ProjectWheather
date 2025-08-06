@@ -4,8 +4,6 @@ package com.example.springexample.controller;
 import com.example.springexample.dto.WeathersDto;
 import com.example.springexample.service.LocationService;
 import com.example.springexample.service.SessionsService;
-import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -22,29 +20,19 @@ public class ControllerMainPage {
     private final LocationService locationService;
 
     @GetMapping("/index")
-    public String signUp(Model model, HttpServletRequest request) {
-        String id = "";
-        Cookie[] cookies = request.getCookies();
-        if (cookies != null) {
-            for (Cookie cookie : cookies) {
-                if (cookie.getName().equals("id")) {
-                    id = cookie.getValue();
-                }
-            }
-
+    public String signUp(Model model, @CookieValue(value = "id", required = false) String id) {
+        if (id != null) {
             if (sessionsService.expireSession(id)) {
                 model.addAttribute("authorization", "signIn");
             } else {
                 model.addAttribute("authorization", "signOut");
                 List<WeathersDto> listWeatherDto = locationService.getWeather(id);
-
                 if (listWeatherDto.size() > 5) {
                     return "error";
                 }
                 else {
                     model.addAttribute("weathers", listWeatherDto);
                 }
-
             }
         } else {
             model.addAttribute("authorization", "signUp");
@@ -78,17 +66,10 @@ public class ControllerMainPage {
     }
 
     @PostMapping("/delete")
-    public String deleteWeather(@ModelAttribute WeathersDto weathersDto, HttpServletRequest request) {
-        Cookie[] cookies=request.getCookies();
-        String idCookie="";
-        if (cookies != null) {
-            for (Cookie cookie : cookies) {
-                if (cookie.getName().equals("id")) {
-                    idCookie = cookie.getValue();
-                }
-            }
+    public String deleteWeather(@ModelAttribute WeathersDto weathersDto, @CookieValue(value = "id", required = false) String id) {
+        if (id != null) {
+            locationService.deleteLocation(weathersDto.getName(), id);
         }
-        locationService.deleteLocation(weathersDto.getName(), idCookie);
         return "redirect:/index";
     }
 

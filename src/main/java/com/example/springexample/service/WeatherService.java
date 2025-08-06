@@ -6,7 +6,6 @@ import com.example.springexample.dto.WeathersDto;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClientRequestException;
@@ -18,8 +17,7 @@ import java.util.Optional;
 
 @Service
 public class WeatherService {
-    //    private final String WEATHER_API_URL = "http://api.openweathermap.org/data/2.5/weather";
-    private final String WEATHER_API_KEY = "7a5864eb5cac7c74e9bc2a2e3a5023bf";
+
     private final WebClient webClient;
     private final ObjectMapper objectMapper;
     private final WeatherConfiguration weatherConfiguration;
@@ -32,10 +30,7 @@ public class WeatherService {
 
     }
 
-    public List<GeoCityDto> getGeoCity(String city){
-
-        System.out.println("Using baseUrl: " + weatherConfiguration.getBaseUrl());
-        System.out.println("Using API key: " + weatherConfiguration.getKey());
+    public List<GeoCityDto> getGeoCity(String city) {
 
         try {
             String jsonpObject = webClient.get().
@@ -47,7 +42,6 @@ public class WeatherService {
                             .build())
                     .retrieve()
                     .bodyToMono(String.class).block();
-
 
 
             System.out.println(jsonpObject);
@@ -76,13 +70,11 @@ public class WeatherService {
 
             System.out.println(unpackedWeatherDtos);
             return unpackedWeatherDtos;
-        }catch (IllegalStateException e) {
+        } catch (IllegalStateException e) {
             throw new IllegalStateException("Город не найден в ответе OpenWeather");
-        }
-        catch (WebClientResponseException e){
+        } catch (WebClientResponseException e) {
             throw new IllegalStateException("Город не найден в ответе OpenWeather");
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
             return null;
         }
@@ -106,17 +98,6 @@ public class WeatherService {
                             .build())
                     .retrieve()
                     .bodyToMono(String.class).block();
-
-//            String jsonpObject = WebClient.create("https://api.openweathermap.org").get().
-//                    uri(uriBuilder -> uriBuilder
-//                            .path("/data/2.5/weather")
-//                            .queryParam("lat", lat)
-//                            .queryParam("lon", lon)
-//                            .queryParam("units", "metric")
-//                            .queryParam("appid", WEATHER_API_KEY)
-//                            .build())
-//                    .retrieve()
-//                    .bodyToMono(String.class).block();
 
 
             JsonNode jsonNode = objectMapper.readTree(jsonpObject);

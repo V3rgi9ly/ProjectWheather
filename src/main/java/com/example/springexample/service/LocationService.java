@@ -8,8 +8,6 @@ import com.example.springexample.repository.LocationsRepository;
 import com.example.springexample.repository.SessionsRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -55,14 +53,16 @@ public class LocationService {
     }
 
     public void deleteLocation(String name, String cookie) {
-        Locations locations = locationsRepository.findByName(name);
+        UUID uuid= UUID.fromString(cookie);
+        Sessions sessions = sessionsRepository.findById(uuid);
+        Locations locations = locationsRepository.findByNameAndUserId(name,sessions.getUser().getId());
         locationsRepository.deleteById((long) locations.getId());
     }
 
     public boolean сheckingForDuplicates(Optional<WeathersDto> weathersDto, String id){
         UUID uuid = UUID.fromString(id);
         Sessions sessions = sessionsRepository.findById(uuid);
-        Optional<Locations> locations= Optional.ofNullable(locationsRepository.findByName(weathersDto.get().getName()));
+        Optional<Locations> locations= Optional.ofNullable(locationsRepository.findByNameAndUserId(weathersDto.get().getName(), sessions.getUser().getId()));
         if (locations.isPresent()){
             if (weathersDto.get().getName().equals(locations.get().getName()) && locations.get().getUser().getId()== sessions.getUser().getId() ){
                 return false;

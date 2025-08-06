@@ -10,4 +10,5 @@ import java.util.List;
 public interface LocationsRepository extends JpaRepository<Locations, Long> {
     List<Locations> findByUserId(int userId);
     Locations findByName(String name);
+    Locations findByNameAndUserId(String name, int user);
 }
