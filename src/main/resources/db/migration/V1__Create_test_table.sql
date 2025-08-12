@@ -1,19 +1,19 @@
-create table users(
+create table if not exists users(
     id SERIAL PRIMARY KEY,
-    Login VARCHAR(255),
-    Password VARCHAR(255)
+    login VARCHAR(255),
+    password VARCHAR(255)
 );
 
-create table locations(
+create table if not exists locations(
     id SERIAL PRIMARY KEY,
-    Name VARCHAR(255),
-    UserId INT,
-    Latitude DECIMAL,
-    Longitude DECIMAL
+    name VARCHAR(255),
+    user_id INT,
+    latitude DECIMAL,
+    longitude DECIMAL
 );
 
-create table sessions(
+create table if not exists sessions(
     id UUID PRIMARY KEY,
-    UserId INT,
-    ExpiresAt DATE
+    user_id INT,
+    expires_at  TIMESTAMP WITHOUT TIME ZONE
 );

@@ -19,10 +19,10 @@ import java.util.UUID;
 public class Sessions {
 
     @Id
-    @Column(name = "ID")
+    @Column(name = "id")
     private UUID id;
 
-    @Column(name = "ExpiresAt")
+    @Column(name = "expires_at")
     private LocalDateTime expiresAt;
 
     @OneToOne()

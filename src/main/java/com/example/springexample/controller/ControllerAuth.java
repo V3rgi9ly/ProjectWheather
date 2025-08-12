@@ -36,7 +36,7 @@ public class ControllerAuth {
             return "sign-up-with-errors";
         }
 
-        return "redirect:/index";
+        return "redirect:index";
     }
 
 

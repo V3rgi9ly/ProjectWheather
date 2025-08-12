@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class UsersService {
     private final UsersRepository usersRepository;
-    private final Mapping mapping = Mapping.mapping;
+    private final Mapping mapping;
     private final ObjectMapper objectMapper;
 
     public UsersDto addUsers(String username, String password) {
@@ -20,7 +20,9 @@ public class UsersService {
             throw new IllegalArgumentException("Login already exists");
         }
 
-        Users user = new Users(username, password);
+        Users user = new Users();
+        user.setLogin(username);
+        user.setPassword(password);
         usersRepository.save(user);
         return objectMapper.convertValue(usersRepository.findById(user.getId()), UsersDto.class);
     }

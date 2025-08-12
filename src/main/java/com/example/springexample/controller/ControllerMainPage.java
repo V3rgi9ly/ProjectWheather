@@ -19,6 +19,14 @@ public class ControllerMainPage {
     private final SessionsService sessionsService;
     private final LocationService locationService;
 
+    @RestController
+    public class TestController {
+        @GetMapping("/ping")
+        public String ping() {
+            return "pong";
+        }
+    }
+
     @GetMapping("/index")
     public String signUp(Model model, @CookieValue(value = "id", required = false) String id) {
         if (id != null) {

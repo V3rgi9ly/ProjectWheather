@@ -1,1 +1,1 @@
-Alter table sessions alter column expires_at TYPE TIMESTAMP WITHOUT TIME ZONE;
+-- Alter table sessions alter column expires_at TYPE TIMESTAMP WITHOUT TIME ZONE;

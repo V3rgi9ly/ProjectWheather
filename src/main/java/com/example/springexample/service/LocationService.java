@@ -19,7 +19,7 @@ public class LocationService {
     private final LocationsRepository locationsRepository;
     private final SessionsRepository sessionsRepository;
     private final WeatherService weatherService;
-    private  final Mapping mapping=Mapping.mapping;
+    private  final Mapping mapping;
 
     public void saveLocation(WeathersDto weathersDto, String id) {
 

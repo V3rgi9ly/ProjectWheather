@@ -14,9 +14,9 @@ import lombok.Setter;
 public class WeathersDto {
 
 
-    @JsonProperty("lat")
+    @JsonProperty("latitude")
     private double latitude;
-    @JsonProperty("lon")
+    @JsonProperty("longitude")
     private double longitude;
 
     @JsonProperty("main")
@@ -41,18 +41,4 @@ public class WeathersDto {
     private double feels_like_temperature;
 
 
-    @Override
-    public String toString() {
-        return "WeathersDto{" +
-                "latitude=" + latitude +
-                ", longitude=" + longitude +
-                ", mainConditionWeather='" + mainConditionWeather + '\'' +
-                ", iconWeather='" + iconWeather + '\'' +
-                ", description='" + description + '\'' +
-                ", name='" + name + '\'' +
-                ", temperature=" + temperature +
-                ", humidity=" + humidity +
-                ", feels_like_temperature=" + feels_like_temperature +
-                '}';
-    }
 }

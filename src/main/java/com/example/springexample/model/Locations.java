@@ -2,6 +2,7 @@ package com.example.springexample.model;
 
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.math.BigDecimal;
@@ -10,23 +11,24 @@ import java.math.BigDecimal;
 @Getter
 @Setter
 @Table(name="locations")
+@NoArgsConstructor
 public class Locations {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "ID")
+    @Column(name = "id")
     private int id;
 
-    @Column(name = "Name")
+    @Column(name = "name")
     private String name;
 
-    @Column(name = "Latitude")
+    @Column(name = "latitude")
     private BigDecimal latitude;
 
-    @Column(name = "Longitude")
+    @Column(name = "longitude")
     private BigDecimal longitude;
 
     @ManyToOne()
-    @JoinColumn(name = "user_id", referencedColumnName = "ID")
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
     private Users user;
 }

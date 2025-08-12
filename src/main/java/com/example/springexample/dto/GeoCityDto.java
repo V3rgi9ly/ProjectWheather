@@ -29,10 +29,5 @@ public class GeoCityDto {
     @JsonProperty("lon")
     private double longitude;
 
-    @Override
-    public String toString() {
-        return String.format(Locale.US,  // Используем точку в качестве разделителя
-                "GeoCityDto{city='%s', country='%s', latitude=%.4f, longitude=%.4f}",
-                city, country, latitude, longitude);
-    }
+
 }

@@ -18,13 +18,13 @@ public class Users {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="ID")
+    @Column(name="id")
     private int id;
 
-    @Column(name="Login")
+    @Column(name="login")
     private String login;
 
-    @Column(name="Password")
+    @Column(name="password")
     private String password;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -33,8 +33,8 @@ public class Users {
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     private Sessions sessions;
 
-    public Users(String login, String password) {
-        this.login = login;
-        this.password = password;
-    }
+//    public Users(String login, String password) {
+//        this.login = login;
+//        this.password = password;
+//    }
 }

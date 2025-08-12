@@ -1,26 +1,26 @@
-ALTER TABLE sessions
-    ADD expires_at TIMESTAMP WITHOUT TIME ZONE;
-
-ALTER TABLE sessions
-    ADD user_id INTEGER;
-
-ALTER TABLE locations
-    ADD user_id INTEGER;
-
-ALTER TABLE sessions
-    ADD CONSTRAINT uc_sessions_user UNIQUE (user_id);
-
-ALTER TABLE locations
-    ADD CONSTRAINT FK_LOCATIONS_ON_USER FOREIGN KEY (user_id) REFERENCES users (id);
-
-ALTER TABLE sessions
-    ADD CONSTRAINT FK_SESSIONS_ON_USER FOREIGN KEY (user_id) REFERENCES users (id);
-
-ALTER TABLE sessions
-    DROP COLUMN expiresat;
-
-ALTER TABLE sessions
-    DROP COLUMN userid;
-
-ALTER TABLE locations
-    DROP COLUMN userid;
+-- ALTER TABLE sessions
+--     ADD expires_at TIMESTAMP WITHOUT TIME ZONE;
+--
+-- ALTER TABLE sessions
+--     ADD user_id INTEGER;
+--
+-- ALTER TABLE locations
+--     ADD user_id INTEGER;
+--
+-- ALTER TABLE sessions
+--     ADD CONSTRAINT uc_sessions_user UNIQUE (user_id);
+--
+-- ALTER TABLE locations
+--     ADD CONSTRAINT FK_LOCATIONS_ON_USER FOREIGN KEY (user_id) REFERENCES users (id);
+--
+-- ALTER TABLE sessions
+--     ADD CONSTRAINT FK_SESSIONS_ON_USER FOREIGN KEY (user_id) REFERENCES users (id);
+--
+-- ALTER TABLE sessions
+--     DROP COLUMN expires_at;
+--
+-- ALTER TABLE sessions
+--     DROP COLUMN user_id;
+--
+-- ALTER TABLE locations
+--     DROP COLUMN user_id;

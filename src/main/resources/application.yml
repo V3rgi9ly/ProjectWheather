@@ -1,7 +1,12 @@
 logging:
   level:
     org.flywaydb.core: DEBUG
+    com.your.package: DEBUG
 spring:
+  thymeleaf:
+    prefix: classpath:/templates/
+    suffix: .html
+    cache: false
   flyway:
     enabled: true
     locations: classpath:db/migration
@@ -19,7 +24,7 @@ spring:
   jpa:
     show-sql: true
     hibernate:
-      ddl-auto: validate
+      ddl-auto: update
 server:
   port: 8082
 
@@ -27,5 +32,4 @@ weather:
   api:
     baseUrl: https://api.openweathermap.org
     key: 7a5864eb5cac7c74e9bc2a2e3a5023bf
-
 
