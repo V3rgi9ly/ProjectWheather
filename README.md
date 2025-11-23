@@ -142,3 +142,68 @@ public class WeatherConfiguration {
 | `ID`        | UUID     | Unique session identifier, primary key |
 | `UserId`    | int      | The user who owns the session |
 | `ExpiresAt` | datetime | Session expiration time (creation time + N hours) |
+
+
+## Getting weather information using the OpenWeatherMap API
+Integration and implementation with the OpenWeather API was implemented
+
+#### Enable API OpenWeather
+```
+weather:
+  api:
+    baseUrl: https://api.openweathermap.org
+    key: 7a5864eb5cac7c74e9bc2a2e3a5023bf
+```
+
+#### Example service for realization API OpenWeather
+```
+    public List<GeoCityDto> getGeoCity(String city) {
+
+        try {
+            String jsonpObject = webClient.get().
+                    uri(uriBuilder -> uriBuilder
+                            .path("/geo/1.0/direct")
+                            .queryParam("q", city)
+                            .queryParam("limit", 5)
+                            .queryParam("appid", weatherConfiguration.getKey())
+                            .build())
+                    .retrieve()
+                    .bodyToMono(String.class).block();
+
+
+            System.out.println(jsonpObject);
+            JsonNode locations = objectMapper.readTree(jsonpObject);
+            System.out.println(locations);
+
+            if (!locations.isArray() || locations.isEmpty()) {
+                throw new IllegalStateException("Город не найден в ответе OpenWeather");
+            }
+
+            List<Optional<GeoCityDto>> geoCityDtoList = new ArrayList<>();
+            for (JsonNode node : locations) {
+                GeoCityDto geoCityDto = new GeoCityDto();
+                geoCityDto.setCity(node.path("name").asText());
+                geoCityDto.setCountry(node.path("country").asText());
+                geoCityDto.setLatitude(node.path("lat").asDouble());
+                geoCityDto.setLongitude(node.path("lon").asDouble());
+
+                geoCityDtoList.add(Optional.of(geoCityDto));
+            }
+
+            List<GeoCityDto> unpackedWeatherDtos = geoCityDtoList.stream()
+                    .filter(Optional::isPresent)
+                    .map(Optional::get)
+                    .toList();
+
+            System.out.println(unpackedWeatherDtos);
+            return unpackedWeatherDtos;
+        } catch (IllegalStateException e) {
+            throw new IllegalStateException("Город не найден в ответе OpenWeather");
+        } catch (WebClientResponseException e) {
+            throw new IllegalStateException("Город не найден в ответе OpenWeather");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+```
